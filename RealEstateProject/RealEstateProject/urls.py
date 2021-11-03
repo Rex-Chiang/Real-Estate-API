@@ -15,7 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from RealEstateApp.views import RegisterView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path(r'api/register/', RegisterView.as_view()),
 ]
