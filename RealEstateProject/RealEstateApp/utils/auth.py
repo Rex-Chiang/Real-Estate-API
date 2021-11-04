@@ -1,3 +1,5 @@
+from RealEstateApp.models import UserToken
+from rest_framework import exceptions
 
 def md5(user):
     import hashlib
@@ -9,3 +11,15 @@ def md5(user):
         return m.hexdigest()
     except:
         raise Exception("Fail To Generate Token !")
+
+class Authentication(object):
+    def authenticate(self, request):
+        token = request.query_params.get("token")
+        token_obj = UserToken.objects.filter(token = token).first()
+        if not token_obj:
+            raise exceptions.AuthenticationFailed("User Verification Failed !")
+        return (token_obj.user, token_obj)
+
+    # This function must be existed
+    def authenticate_header(self, request):
+        pass

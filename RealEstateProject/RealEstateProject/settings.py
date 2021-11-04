@@ -70,6 +70,12 @@ TEMPLATES = [
     },
 ]
 
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES":(
+        "RealEstateApp.utils.auth.Authentication",
+    )
+}
+
 WSGI_APPLICATION = 'RealEstateProject.wsgi.application'
 
 
