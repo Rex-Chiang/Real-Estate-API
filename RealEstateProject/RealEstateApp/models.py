@@ -3,9 +3,9 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 class UserProfile(AbstractUser):
-    user_level_choices = ((1, "Level 1"), (2, "Level 2"), (3, "Level 3"),)
-    user_level = models.IntegerField(choices = user_level_choices)
-    phone = models.CharField(max_length = 10, verbose_name = "Phone")
+    user_level = models.IntegerField(default = 1)
+    email = models.EmailField(unique=True, max_length=50, verbose_name="Email")
+    phone = models.CharField(unique = True, max_length = 10, verbose_name = "Phone")
     living_area = models.CharField(max_length = 50, verbose_name = "Living Area")
     date_joined = models.DateTimeField(default = datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S"), verbose_name = "Joined Date")
 
