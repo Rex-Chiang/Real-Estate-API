@@ -4,6 +4,7 @@ from RealEstateApp.utils import auth
 from rest_framework.response import Response
 from rest_framework import views, viewsets
 from rest_framework import status
+import pymysql
 
 class RegisterView(views.APIView):
     def post(self, request):
@@ -38,3 +39,18 @@ class TokenView(views.APIView):
             return Response({"message":str(msg)}, status = status.HTTP_400_BAD_REQUEST)
 
         return Response({"message":"Get Token Successfully!", "token":token}, status = status.HTTP_201_CREATED)
+
+class RealEstateDataView(views.APIView):
+
+    authentication_classes = [auth.Authentication,]
+
+    def get(self, request):
+
+        db = pymysql.connect(user="root", password="1209", host="127.0.0.1", port=3306, db="real_estate", cursorclass=pymysql.cursors.DictCursor)
+        cursor = db.cursor()
+        cursor.execute("SELECT * FROM real_estate_taoyuan LIMIT 3;")
+        data = cursor.fetchall()
+        db.close()
+
+        return Response(data)
+
