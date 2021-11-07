@@ -1,9 +1,11 @@
 from RealEstateApp.models import UserProfile, UserToken
 from RealEstateApp.serializers import UserProfileSerializer
 from RealEstateApp.utils import auth
+from django.conf import settings
 from rest_framework.response import Response
 from rest_framework import views, viewsets
 from rest_framework import status
+from rest_framework.pagination import PageNumberPagination
 import pymysql
 
 class RegisterView(views.APIView):
@@ -40,17 +42,29 @@ class TokenView(views.APIView):
 
         return Response({"message":"Get Token Successfully!", "token":token}, status = status.HTTP_201_CREATED)
 
-class RealEstateDataView(views.APIView):
+class RealEstateDataView(views.APIView, PageNumberPagination):
 
-    authentication_classes = [auth.Authentication,]
+    authentication_classes = []
 
     def get(self, request):
+        try:
+            db = pymysql.connect(user = settings.DATABASES["real_estate_db"]["USER"],
+                                 password = settings.DATABASES["real_estate_db"]["PASSWORD"],
+                                 host = settings.DATABASES["real_estate_db"]["HOST"],
+                                 port = int(settings.DATABASES["real_estate_db"]["PORT"]),
+                                 db = settings.DATABASES["real_estate_db"]["NAME"],
+                                 cursorclass = pymysql.cursors.DictCursor)
+            cursor = db.cursor()
+            cursor.execute("SELECT * FROM real_estate_taoyuan LIMIT 10;")
+            data = cursor.fetchall()
+            db.close()
+        except Exception as msg:
+            return Response({"message": str(msg)}, status=status.HTTP_400_BAD_REQUEST)
 
-        db = pymysql.connect(user="root", password="1209", host="127.0.0.1", port=3306, db="real_estate", cursorclass=pymysql.cursors.DictCursor)
-        cursor = db.cursor()
-        cursor.execute("SELECT * FROM real_estate_taoyuan LIMIT 3;")
-        data = cursor.fetchall()
-        db.close()
+        page = self.paginate_queryset(data, request)
 
-        return Response(data)
+        if not page:
+            return Response({"message": "Data Not Found !"}, status=status.HTTP_404_NOT_FOUND)
+
+        return self.get_paginated_response(page)
 

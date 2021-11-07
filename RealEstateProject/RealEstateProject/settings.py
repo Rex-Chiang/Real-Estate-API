@@ -75,7 +75,10 @@ TEMPLATES = [
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES":(
         "RealEstateApp.utils.auth.Authentication",
-    )
+    ),
+    "DEFAULT_PAGINATION_CLASS":
+    "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 5,
 }
 
 WSGI_APPLICATION = 'RealEstateProject.wsgi.application'
@@ -91,7 +94,7 @@ DATABASES = {
     },
     'real_estate_db': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'real_estate_data',
+            'NAME': 'real_estate',
             'USER': 'root',
             'PASSWORD': '1209',
             'HOST': '127.0.0.1',
