@@ -4,7 +4,7 @@ import pandas as pd
 import os
 
 class RealEstateData():
-    def __init__(self, user, password, area):
+    def __init__(self, user, password, area = "Taoyuan"):
         self.user = user
         self.password = password
         self.area = area
@@ -31,6 +31,6 @@ if __name__ == "__main__":
 
     RealEstateData = RealEstateData(user = settings.DATABASES["real_estate_db"]["USER"],
                                     password = settings.DATABASES["real_estate_db"]["PASSWORD"],
-                                    area = "Xinbei")
+                                    area = "Taipei")
     RealEstateData.data_processing()
     RealEstateData.df_to_database()

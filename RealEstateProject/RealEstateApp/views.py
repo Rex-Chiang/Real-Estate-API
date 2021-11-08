@@ -72,3 +72,27 @@ class RealEstateDataView(views.APIView, PageNumberPagination):
             return Response({"message": "Data Not Found !"}, status=status.HTTP_404_NOT_FOUND)
 
         return self.get_paginated_response(page)
+
+class RealEstateAreaDataView(views.APIView, PageNumberPagination):
+
+    permission_classes = [auth.AdvancedSearch,]
+
+    def get(self, request):
+        try:
+            area = request.query_params.get("area")
+            if not area:
+                area = "taoyuan"
+
+            command = "SELECT * FROM real_estate_" + area.lower() + " LIMIT 10;"
+            external_db = database.ControlExternalDB()
+            data = external_db.query(command)
+
+        except Exception as msg:
+            return Response({"message": str(msg)}, status=status.HTTP_400_BAD_REQUEST)
+
+        page = self.paginate_queryset(data, request)
+
+        if not page:
+            return Response({"message": "Data Not Found !"}, status=status.HTTP_404_NOT_FOUND)
+
+        return self.get_paginated_response(page)

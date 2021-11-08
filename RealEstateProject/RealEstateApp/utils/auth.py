@@ -24,3 +24,9 @@ class Authentication(object):
     # This function must be existed
     def authenticate_header(self, request):
         pass
+
+class AdvancedSearch(object):
+    def has_permission(self, request, view):
+        if request.user.username and request.user.user_level > 1:
+            return True
+        return False

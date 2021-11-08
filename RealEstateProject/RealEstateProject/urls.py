@@ -15,11 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from RealEstateApp.views import RegisterView, TokenView, RealEstateDataView
+from RealEstateApp.views import RegisterView, TokenView, RealEstateDataView, RealEstateAreaDataView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path(r'api/register/', RegisterView.as_view()),
     path(r'api/token/', TokenView.as_view()),
     path(r'api/real_estate_data/', RealEstateDataView.as_view()),
+    path(r'api/real_estate_area_data/', RealEstateAreaDataView.as_view()),
 ]
