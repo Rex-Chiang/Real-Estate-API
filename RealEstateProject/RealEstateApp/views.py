@@ -1,14 +1,15 @@
 from RealEstateApp.models import UserProfile, UserToken
 from RealEstateApp.serializers import UserProfileSerializer
-from RealEstateApp.utils import auth
-from django.conf import settings
-from rest_framework.response import Response
-from rest_framework import views, viewsets
+from RealEstateApp.utils import auth, database
+from rest_framework import views
 from rest_framework import status
+from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
-import pymysql
 
 class RegisterView(views.APIView):
+
+    authentication_classes = []
+
     def post(self, request):
 
         serializer = UserProfileSerializer(data = request.data)
@@ -25,6 +26,9 @@ class RegisterView(views.APIView):
             return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
 class TokenView(views.APIView):
+
+    authentication_classes = []
+
     def post(self, request):
 
         name = request.data.get("username")
@@ -35,7 +39,7 @@ class TokenView(views.APIView):
             return Response("Wrong User Name or Password !", status = status.HTTP_400_BAD_REQUEST)
 
         try:
-            token = auth.md5(user)
+            token = auth.md5(name)
             UserToken.objects.update_or_create(user = user, defaults = {"token": token})
         except Exception as msg:
             return Response({"message":str(msg)}, status = status.HTTP_400_BAD_REQUEST)
@@ -44,20 +48,21 @@ class TokenView(views.APIView):
 
 class RealEstateDataView(views.APIView, PageNumberPagination):
 
-    authentication_classes = []
+    authentication_classes = [auth.Authentication,]
 
     def get(self, request):
+        if request.user.user_level == 3:
+            limit = "30"
+        elif request.user.user_level == 2:
+            limit = "20"
+        else:
+            limit = "10"
+
         try:
-            db = pymysql.connect(user = settings.DATABASES["real_estate_db"]["USER"],
-                                 password = settings.DATABASES["real_estate_db"]["PASSWORD"],
-                                 host = settings.DATABASES["real_estate_db"]["HOST"],
-                                 port = int(settings.DATABASES["real_estate_db"]["PORT"]),
-                                 db = settings.DATABASES["real_estate_db"]["NAME"],
-                                 cursorclass = pymysql.cursors.DictCursor)
-            cursor = db.cursor()
-            cursor.execute("SELECT * FROM real_estate_taoyuan LIMIT 10;")
-            data = cursor.fetchall()
-            db.close()
+            command = "SELECT * FROM real_estate_taoyuan LIMIT " + limit + ";"
+            external_db = database.ControlExternalDB()
+            data = external_db.query(command)
+
         except Exception as msg:
             return Response({"message": str(msg)}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -67,4 +72,3 @@ class RealEstateDataView(views.APIView, PageNumberPagination):
             return Response({"message": "Data Not Found !"}, status=status.HTTP_404_NOT_FOUND)
 
         return self.get_paginated_response(page)
-

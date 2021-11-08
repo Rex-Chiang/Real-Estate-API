@@ -6,10 +6,11 @@ def md5(user):
     import time
     try:
         cur_time = str(time.time())
+        print(1)
         m = hashlib.md5(bytes(user, encoding = "utf-8"))
         m.update(bytes(cur_time, encoding = "utf-8"))
         return m.hexdigest()
-    except:
+    except Exception as msg:
         raise Exception("Fail To Generate Token !")
 
 class Authentication(object):

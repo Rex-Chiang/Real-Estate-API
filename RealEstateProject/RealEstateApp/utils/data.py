@@ -4,10 +4,11 @@ import pandas as pd
 import os
 
 class RealEstateData():
-    def __init__(self, user, password):
-        self.df = pd.read_csv ("./real_estate_data_csv/h_lvr_land_a.csv")
+    def __init__(self, user, password, area):
         self.user = user
         self.password = password
+        self.area = area
+        self.df = pd.read_csv ("./real_estate_data_csv/" + self.area + ".csv")
 
     def data_processing(self):
         self.df = self.df.drop([0])
@@ -22,13 +23,14 @@ class RealEstateData():
 
     def df_to_database(self):
         engine = create_engine("mysql+pymysql://" + self.user + ":" + self.password + "@localhost:3306/real_estate")
-        self.df.to_sql(name = 'real_estate_taoyuan', con = engine, index = False)
+        self.df.to_sql(name = "real_estate_" + self.area.lower(), con = engine, index = False)
 
 if __name__ == "__main__":
 
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'RealEstateProject.settings')
 
     RealEstateData = RealEstateData(user = settings.DATABASES["real_estate_db"]["USER"],
-                                    password = settings.DATABASES["real_estate_db"]["PASSWORD"])
+                                    password = settings.DATABASES["real_estate_db"]["PASSWORD"],
+                                    area = "Xinbei")
     RealEstateData.data_processing()
     RealEstateData.df_to_database()
