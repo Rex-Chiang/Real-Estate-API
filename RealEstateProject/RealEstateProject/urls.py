@@ -20,6 +20,7 @@ from RealEstateApp.views import RegisterView, TokenView, RealEstateDataView, Rea
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # Skip the authentication when user visit API document
     path(r'api/doc/', include_docs_urls(title = "Real Estate API Document", authentication_classes = [])),
     path(r'api/register/', RegisterView.as_view()),
     path(r'api/token/', TokenView.as_view()),

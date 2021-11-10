@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractUser
 class UserProfile(AbstractUser):
     user_level = models.IntegerField(default = 1)
     email = models.EmailField(unique=True, max_length=50, verbose_name="Email")
+    # Use null=True and blank=True to cover the null value in the situation that field need to be unique
     phone = models.CharField(unique = True, null=True, blank=True, max_length = 10, verbose_name = "Phone")
     living_area = models.CharField(max_length = 50, verbose_name = "Living Area")
     date_joined = models.DateTimeField(default = datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S"), verbose_name = "Joined Date")

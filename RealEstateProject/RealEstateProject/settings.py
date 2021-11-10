@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+# Setup pymysql with MySQLdb
 import pymysql
 pymysql.install_as_MySQLdb()
 
@@ -72,6 +73,8 @@ TEMPLATES = [
     },
 ]
 
+# Set customised Authentication
+# Add pagination and auto-create document
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES":(
         "RealEstateApp.utils.auth.Authentication",
@@ -88,6 +91,7 @@ WSGI_APPLICATION = 'RealEstateProject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# Add the external MySQL database, but isn't used as model
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
