@@ -15,10 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from rest_framework.documentation import include_docs_urls
 from RealEstateApp.views import RegisterView, TokenView, RealEstateDataView, RealEstateAreaDataView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path(r'api/doc/', include_docs_urls(title = "Real Estate API Document", authentication_classes = [])),
     path(r'api/register/', RegisterView.as_view()),
     path(r'api/token/', TokenView.as_view()),
     path(r'api/real_estate_data/', RealEstateDataView.as_view()),
