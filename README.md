@@ -22,3 +22,6 @@ source RealEstateEnv/bin/activate
 cd RealEstateProject
 python3 manage.py runserver
 ```
+
+## Demo
+![Demo](https://github.com/Rex-Chiang/Real-Estate-API/blob/main/Demo.gif)
