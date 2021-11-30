@@ -18,7 +18,9 @@ This project used the real estate related data as resource from public governmen
 ## Tests
 ```
 cd Real-Estate-API
+python3 -m venv RealEstateEnv
 source RealEstateEnv/bin/activate
+pip3 install -r requirements.txt
 cd RealEstateProject
 python3 manage.py runserver
 ```
