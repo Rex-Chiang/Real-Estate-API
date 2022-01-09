@@ -22,8 +22,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # Skip the authentication when user visit API document
     path(r'api/doc/', include_docs_urls(title = "Real Estate API Document", authentication_classes = [])),
-    path(r'api/register/', RegisterView.as_view()),
-    path(r'api/token/', TokenView.as_view()),
-    path(r'api/real_estate_data/', RealEstateDataView.as_view()),
-    path(r'api/real_estate_area_data/', RealEstateAreaDataView.as_view()),
+    path(r'api/register/', RegisterView.as_view(), name = "register"),
+    path(r'api/token/', TokenView.as_view(), name = "token"),
+    path(r'api/real_estate_data/', RealEstateDataView.as_view(), name = "data"),
+    path(r'api/real_estate_area_data/', RealEstateAreaDataView.as_view(), name = "area_data"),
 ]
