@@ -10,6 +10,7 @@ This project used the real estate related data as resource from public governmen
 * Django Rest Framwork
 * PyMySQL
 * Pandas
+* Pytest
 
 **Database:**
 * SQLite3
